@@ -1,0 +1,21 @@
+services:
+  protocol:
+    build: ./Fennel-Protocol/
+    working_dir: /app/Fennel-Protocol
+    volumes:
+      - ./Fennel-Protocol/:/app/Fennel-Protocol
+    entrypoint: sh /app/Fennel-Protocol/docker-entry.sh
+  cli:
+    build: ./fennel-cli/
+    working_dir: /app/fennel-cli
+    volumes:
+      - ./fennel-cli/:/app/fennel-cli
+    entrypoint: sh /app/fennel-cli/docker-entry.sh
+    depends_on:
+      - "server"
+  server:
+    build: ./fennel-server/
+    working_dir: /app/fennel-server
+    volumes:
+      - ./fennel-server/:/app/fennel-server
+    entrypoint: sh /app/fennel-server/docker-entry.sh
