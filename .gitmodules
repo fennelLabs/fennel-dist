@@ -7,3 +7,6 @@
 [submodule "fennel-server"]
 	path = fennel-server
 	url = git@github.com:fennelLabs/fennel-server.git
+[submodule "fennel-lib"]
+	path = fennel-lib
+	url = git@github.com:fennelLabs/fennel-lib.git
