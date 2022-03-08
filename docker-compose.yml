@@ -13,6 +13,12 @@ services:
     entrypoint: sh /app/fennel-cli/docker-entry.sh
     depends_on:
       - "server"
+  lib:
+    build: ./fennel-lib/
+    working_dir: /app/fennel-lib
+    volumes:
+      - ./fennel-lib/:/app/fennel-lib
+    entrypoint: sh /app/fennel-lib/docker-entry.sh
   server:
     build: ./fennel-server/
     working_dir: /app/fennel-server
