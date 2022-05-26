@@ -10,3 +10,9 @@
 [submodule "fennel-lib"]
 	path = fennel-lib
 	url = git@github.com:fennelLabs/fennel-lib.git
+[submodule "fennel-app"]
+	path = fennel-app
+	url = git@github.com:fennelLabs/fennel-app.git
+[submodule "fennel-api"]
+	path = fennel-api
+	url = git@github.com:fennelLabs/fennel-api.git
