@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./fennel-api/nginx
+    volumes:
+      - staticvol:/opt/app/static
+      - mediavol:/opt/app/mediafiles
+    ports:
+      - 1234:1234
+    depends_on:
+      - "api-dev"
+  database:
+    image: "postgres"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+  api-dev:
+    build:
+      context: ./fennel-api
+      dockerfile: Dockerfile
+    entrypoint: "./build-dev.sh"
+    volumes:
+      - staticvol:/opt/app/static
+      - mediavol:/opt/app/mediafiles
+    environment:
+      - DEBUG=True
+      - ADMIN_NAME=""
+      - ADMIN_EMAIL=""
+      - EMAIL_HOST=""
+      - EMAIL_PORT=""
+      - EMAIL_USERNAME=""
+      - EMAIL_PASSWORD=""
+      - DEFAULT_FROM_EMAIL=""
+      - SERVER_EMAIL=""
+      - ENVIRONMENT="LOCAL"
+      - SECRET_KEY=2HY>fXi!dQ&(9Vf.XghCa;L6G=Ul4r-Bwqh>ae0RG3vIh1ZJ%T
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=postgres
+      - POSTGRES_NAME=database
+      - ENVIRONMENT=LOCAL
+    depends_on:
+      - "database"
+  app-dev:
+    build: ./fennel-app
+    working_dir: /app/fennel-app
+    ports:
+      - 3000:3000
+    depends_on:
+      - "ipfs"
+      - "api-dev"
+      - "cli-dev"
+      - "protocol-dev"
+  ipfs:
+    container_name: ipfs
+    image: ipfs/go-ipfs:release
+    ports:
+      - '4001:4001'
+      - '5001:5001'
+      - '8080:8080'
+    volumes:
+      - ipfs:/data/ipfs
+      - ./fennel-app/cors.sh:/cors.sh
+      - ./fennel-app/start_ipfs.sh:/start_ipfs.sh
+    entrypoint: /bin/sh /start_ipfs.sh
+  cli-dev:
+    build: ./fennel-cli
+    working_dir: /app
+    volumes:
+      - fennel-cli:/app
+    ports:
+      - 9030:9030
+  protocol-dev:
+    build: ./fennel-protocol
+    working_dir: /app
+    volumes:
+      - Fennel-Protocol:/app
+    ports:
+      - "9944:9944"
+    entrypoint: cargo run --release -- --dev --tmp
+
+volumes:
+  Fennel-Protocol:
+  fennel-cli:
+  fennel-app:
+  ipfs:
+  db:
+  staticvol:
+  mediavol:
