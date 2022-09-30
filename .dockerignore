@@ -1,0 +1,7 @@
+**/target
+**/node_modules
+**/build
+**/.dockerignore
+**/Dockerfile*
+**/.parcel-cache
+**/.github
