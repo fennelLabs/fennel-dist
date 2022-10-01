@@ -9,7 +9,7 @@ services:
     ports:
       - 1234:1234
     depends_on:
-      - "api-dev"
+      - "apidev"
     networks:
       default:
         ipv4_address: 172.10.10.8
@@ -24,7 +24,7 @@ services:
     networks:
       default:
         ipv4_address: 172.10.10.5
-  api-dev:
+  apidev:
     build:
       context: ./fennel-api
       dockerfile: Dockerfile
@@ -54,16 +54,16 @@ services:
     networks:
       default:
         ipv4_address: 172.10.10.6
-  app-dev:
+  appdev:
     build: ./fennel-app
     working_dir: /app/fennel-app
     ports:
       - 3000:3000
     depends_on:
       - "ipfs"
-      - "api-dev"
-      - "cli-dev"
-      - "protocol-dev"
+      - "apidev"
+      - "clidev"
+      - "protocoldev"
     networks:
       default:
         ipv4_address: 172.10.10.7
@@ -82,7 +82,7 @@ services:
     networks:
       default:
         ipv4_address: 172.10.10.2
-  cli-dev:
+  clidev:
     build: ./fennel-cli
     working_dir: /app
     volumes:
@@ -92,14 +92,14 @@ services:
     networks:
       default:
         ipv4_address: 172.10.10.3
-  protocol-dev:
+  protocoldev:
     build: ./fennel-protocol
     working_dir: /app
     volumes:
       - Fennel-Protocol:/app
     ports:
       - "9944:9944"
-    entrypoint: cargo run --release -- --dev --tmp
+    entrypoint: cargo run --release -- --chain=dev --ws-external --rpc-external --rpc-cors=all --rpc-methods=unsafe --ws-port=9944 --rpc-port=9933 --tmp
     networks:
       default:
         ipv4_address: 172.10.10.4
