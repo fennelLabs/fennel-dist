@@ -10,9 +10,6 @@ services:
       - 1234:1234
     depends_on:
       - "apidev"
-    networks:
-      default:
-        ipv4_address: 172.10.10.8
   database:
     image: "postgres"
     environment:
@@ -21,9 +18,6 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - db:/var/lib/postgresql/data
-    networks:
-      default:
-        ipv4_address: 172.10.10.5
   apidev:
     build:
       context: ./fennel-api
@@ -51,9 +45,6 @@ services:
       - ENVIRONMENT=LOCAL
     depends_on:
       - "database"
-    networks:
-      default:
-        ipv4_address: 172.10.10.6
   appdev:
     build: ./fennel-app
     working_dir: /app/fennel-app
@@ -64,9 +55,6 @@ services:
       - "apidev"
       - "clidev"
       - "protocoldev"
-    networks:
-      default:
-        ipv4_address: 172.10.10.7
   ipfs:
     container_name: ipfs
     image: ipfs/go-ipfs:release
@@ -79,9 +67,6 @@ services:
       - ./fennel-app/cors.sh:/cors.sh
       - ./fennel-app/start_ipfs.sh:/start_ipfs.sh
     entrypoint: /bin/sh /start_ipfs.sh
-    networks:
-      default:
-        ipv4_address: 172.10.10.2
   clidev:
     build: ./fennel-cli
     working_dir: /app
@@ -89,9 +74,6 @@ services:
       - fennel-cli:/app
     ports:
       - 9030:9030
-    networks:
-      default:
-        ipv4_address: 172.10.10.3
   protocoldev:
     build: ./fennel-protocol
     working_dir: /app
@@ -99,9 +81,6 @@ services:
       - Fennel-Protocol:/app
     ports:
       - "9944:9944"
-    networks:
-      default:
-        ipv4_address: 172.10.10.4
 
 volumes:
   Fennel-Protocol:
@@ -111,9 +90,3 @@ volumes:
   db:
   staticvol:
   mediavol:
-
-networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.10.10.0/24
